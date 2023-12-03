@@ -1,12 +1,12 @@
 fn main() {
-    // let input: &str = include_str!("input_01.txt").trim();
-    let input: &str = "two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7pqrstsixteen";
+    let input: &str = include_str!("input_01.txt").trim();
+    // let input: &str = "two1nine
+// eightwothree
+// abcone2threexyz
+// xtwone3four
+// 4nineeightseven2
+// zoneight234
+// 7pqrstsixteen";
 
     // let answer_01 = part_01(&input);
     // println!("{}", &answer_01);
@@ -47,8 +47,22 @@ fn find_first_digit(line: &str, digit_words: &Vec<DigitWord>) -> char {
     ' '
 }
 
-// fn find_last_digit(line: &str, digit_words: &Vec<DigitWord>) -> char {
-// }
+fn find_last_digit(line: &str, digit_words: &Vec<DigitWord>) -> char {
+
+    let line = line.to_string();
+
+    for i in (0..line.len()).rev() {
+        if line.chars().nth(i).unwrap().is_digit(10) {
+            return line.chars().nth(i).unwrap();
+        }
+        for dw in digit_words {
+            if line[i-1..].contains(&dw.word) {
+                return dw.digit
+            }
+        }
+    }
+    ' '
+}
 
 fn part_02(data: &str) -> isize {
     let mut sum: isize = 0;
@@ -66,10 +80,9 @@ fn part_02(data: &str) -> isize {
 
     for line in data.lines() {
         let first_digit: char = find_first_digit(&line, &replace_digit_words);
-        println!("{}", &first_digit);
-        // let digits: Vec<char> = line.chars().filter(|c| c.is_digit(10)).collect();
-        // let num_string = format!("{}{}", digits.first().unwrap(), digits.last().unwrap());
-        // sum = sum + num_string.parse::<isize>().unwrap();
+        let last_digit: char = find_last_digit(&line, &replace_digit_words);
+        let num_string = format!("{}{}", first_digit, last_digit); 
+        sum = sum + num_string.parse::<isize>().unwrap();
     }
     sum
 }
